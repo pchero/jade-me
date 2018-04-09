@@ -12,7 +12,7 @@
   "scripts": {
     "ng": "ng",
     "conventional-changelog": "conventional-changelog",
-    "start": "ng serve --host 0.0.0.0 --port 4202",
+    "start": "ng serve --host 0.0.0.0 --port 4202 --ssl 1 --ssl-key ./jade-me.pem --ssl-cert ./jade-me.pem",
     "build": "ng build",
     "build:prod": "npm run build -- --prod --aot",
     "test": "ng test -sr",
@@ -68,6 +68,7 @@
     "roboto-fontface": "0.8.0",
     "rxjs": "5.5.5",
     "socicon": "3.0.5",
+    "taffy": "^2.6.2",
     "tinymce": "4.5.7",
     "typeface-exo": "0.0.22",
     "web-animations-js": "2.2.5",
