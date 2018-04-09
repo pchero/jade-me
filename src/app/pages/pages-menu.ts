@@ -8,6 +8,18 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
+    title: 'Buddy',
+    icon: 'fa fa-users',
+    link: '/pages/buddy',
+    home: false,
+  },
+  {
+    title: 'Chat',
+    icon: 'fa fa-comment',
+    link: '/pages/chat',
+    home: false,
+  },
+  {
     title: 'FEATURES',
     group: true,
   },

@@ -4,6 +4,9 @@ import { PagesComponent } from './pages.component';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { PagesRoutingModule } from './pages-routing.module';
 import { ThemeModule } from '../@theme/theme.module';
+import { BuddyComponent } from './buddy/buddy.component';
+import { ChatComponent } from './chat/chat.component';
+import { LoginComponent } from './login/login.component';
 
 const PAGES_COMPONENTS = [
   PagesComponent,
@@ -17,6 +20,9 @@ const PAGES_COMPONENTS = [
   ],
   declarations: [
     ...PAGES_COMPONENTS,
+    BuddyComponent,
+    ChatComponent,
+    LoginComponent,
   ],
 })
 export class PagesModule {
