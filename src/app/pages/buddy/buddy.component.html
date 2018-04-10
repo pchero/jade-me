@@ -1,3 +1,15 @@
-<p>
-  buddy works!
-</p>
+<nb-card>
+  <nb-card-header>
+    My buddies
+  </nb-card-header>
+        
+  <nb-card-body>
+    <ng2-smart-table
+      [settings]="settings"
+      [source]="source"
+      (deleteConfirm)="onDeleteConfirm($event)"
+      (rowSelect)="onRowSelect($event)"
+      >
+      </ng2-smart-table>
+  </nb-card-body>
+</nb-card>

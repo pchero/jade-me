@@ -1,3 +1,16 @@
-<p>
-  chat works!
-</p>
+<nb-card>
+  <nb-card-header>
+    My chats
+  </nb-card-header>
+        
+  <nb-card-body>
+    <ng2-smart-table
+      [settings]="settings"
+      [source]="source"
+      (deleteConfirm)="onDeleteConfirm($event)"
+      (rowSelect)="onRowSelect($event)"
+      (userRowSelect)="onUserRowSelect($event)"
+      >
+      </ng2-smart-table>
+  </nb-card-body>
+</nb-card>

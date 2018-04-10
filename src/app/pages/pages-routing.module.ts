@@ -5,7 +5,7 @@ import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { BuddyComponent } from './buddy/buddy.component';
 import { ChatComponent } from './chat/chat.component';
-import { LoginComponent } from './login/login.component';
+import { RoomComponent } from './room/room.component';
 
 const routes: Routes = [{
   path: '',
@@ -20,8 +20,8 @@ const routes: Routes = [{
       component: ChatComponent,
     },
     {
-      path: 'login',
-      component: LoginComponent,
+      path: 'room',
+      component: RoomComponent,
     },
     {
       path: 'dashboard',

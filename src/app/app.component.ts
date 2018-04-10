@@ -5,6 +5,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { AnalyticsService } from './@core/utils/analytics.service';
+import { JadeService } from './@core/data/jade.service';
 
 @Component({
   selector: 'ngx-app',
@@ -12,7 +13,7 @@ import { AnalyticsService } from './@core/utils/analytics.service';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private analytics: AnalyticsService) {
+  constructor(private analytics: AnalyticsService, private jService: JadeService) {
   }
 
   ngOnInit(): void {

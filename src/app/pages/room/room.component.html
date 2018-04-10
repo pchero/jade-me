@@ -1,0 +1,36 @@
+<nb-card>
+  <nb-card-header>
+    My chat messages
+  </nb-card-header>
+        
+  <nb-card-body>
+    <!-- <div class="msg-list" #list [scrollTop]="list.scrollHeight"> -->
+
+    <div class="msg-list" #list [scrollTop]="list.scrollHeight">
+
+      <div class="columns is-mobile" *ngFor="let m of db().order('tm_create asec').get()">
+    
+        <div [ngClass]="{' is-offset-1 me': m.uuid_owner == info.uuid}" class="chat-bubble column is-10">
+          <p ><b>{{m.uuid_owner}}</b>: {{m.message.message}} </p>
+        </div>
+      </div>
+    
+    </div>
+    
+    <div class="input-group">
+      <div class="dropdown input-group-btn" ngbDropdown>
+        <button type="button" class="btn btn-success dropdown-toggle" ngbDropdownToggle>...</button>
+        <ul class="dropdown-menu" ngbDropdownMenu>
+          <li class="dropdown-item">Call</li>
+        </ul>
+      </div>
+      <input type="text" class="form-control" placeholder="type message" (keyup.enter)="send_message()" [(ngModel)] = 'message'>
+      <span class="input-group-append">
+        <button class="btn btn-success input-group-text">
+          Send
+        </button>
+      </span>
+    </div>
+
+  </nb-card-body>
+</nb-card>

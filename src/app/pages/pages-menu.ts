@@ -20,6 +20,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: false,
   },
   {
+    title: 'Active chats',
+    icon: 'fa fa-comments',
+    children: [
+    ],
+  },
+  {
     title: 'FEATURES',
     group: true,
   },

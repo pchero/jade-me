@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { SmartTableService } from '../../@core/data/smart-table.service';
+import { LocalDataSource } from 'ng2-smart-table';
+import { JadeService } from '../../@core/data/jade.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'chat',
@@ -6,10 +10,64 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit {
+  
+  source: LocalDataSource = new LocalDataSource();
 
-  constructor() { }
+  settings = {
+    delete: {
+      deleteButtonContent: '<i class="nb-trash"></i>',
+      confirmDelete: true,
+    },
+    actions: {
+      add: false,
+      edit: false,
+      delete: true,
+      columnTitle: '',
+    },
+    columns: {
+      uuid: {
+        title: 'Uuid',
+        type: 'string',
+      },
+      name: {
+        title: 'Name',
+        type: 'string',
+      },
+      detail: {
+        title: 'Detail',
+        type: 'string',
+      }
+    },
+  }
+
+  constructor(private jService: JadeService, private route: Router) {
+
+    const db = jService.get_chats();
+
+    this.source.load(db().get());
+    db.settings({
+      onDBChange: () => { this.source.load(db().get()); },
+    });
+  }
 
   ngOnInit() {
   }
 
+  onRowSelect(event): void {
+    const detail = Object.assign({}, event.data);
+    const uuid = detail.uuid;
+
+    this.jService.set_curchat(uuid);
+
+    // this.route.navigate(['/room']);
+  }
+
+  onUserRowSelect(event): void {
+    const detail = Object.assign({}, event.data);
+    const uuid = detail.uuid;
+
+    this.jService.set_curchat(uuid);
+
+    this.route.navigate(['/pages/room']);
+  }
 }

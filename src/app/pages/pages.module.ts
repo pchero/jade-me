@@ -6,7 +6,10 @@ import { PagesRoutingModule } from './pages-routing.module';
 import { ThemeModule } from '../@theme/theme.module';
 import { BuddyComponent } from './buddy/buddy.component';
 import { ChatComponent } from './chat/chat.component';
-import { LoginComponent } from './login/login.component';
+import { RoomComponent } from './room/room.component';
+
+import { Ng2SmartTableModule } from 'ng2-smart-table';
+
 
 const PAGES_COMPONENTS = [
   PagesComponent,
@@ -17,12 +20,15 @@ const PAGES_COMPONENTS = [
     PagesRoutingModule,
     ThemeModule,
     DashboardModule,
+    Ng2SmartTableModule,
   ],
   declarations: [
     ...PAGES_COMPONENTS,
     BuddyComponent,
     ChatComponent,
-    LoginComponent,
+    RoomComponent,
+  ],
+  providers: [
   ],
 })
 export class PagesModule {
