@@ -6,6 +6,9 @@ import { of } from 'rxjs/observable/of';
 import { Router } from '@angular/router';
 
 import * as TAFFY from 'taffy';
+// import * as io from 'socket.io-client';
+import {$WebSocket, WebSocketSendMode} from 'angular2-websocket/angular2-websocket';
+
 
 @Injectable()
 export class JadeService {
@@ -13,6 +16,10 @@ export class JadeService {
   private authtoken: string = '';
   private baseUrl: string = 'https://' + window.location.hostname + ':8081';
   private websockUrl: string = 'wss://' + window.location.hostname + ':8083';
+  // private websock;
+  private websock: $WebSocket;
+
+
   private info: any = {};
   private messages: any = {};
   private cur_chat: string = '';
@@ -30,43 +37,12 @@ export class JadeService {
   }
 
   init() {
-    // get info
-    this.htp_get_info().subscribe(
-      data => {
-        console.log(data);
-        this.info = data.result;
-      }
-    )
+    // keep the init order.
+    this.init_info();
+    this.init_websock();
 
-    // get buddy list
-    this.htp_get_buddy().subscribe(
-      data => {
-        console.log(data);
-        const list = data.result;
-        for(let i = 0; i < list.length; i++) {
-          this.db_buddies.insert(list[i]);
-        }
-      }
-    );
-    
-    // get chat list
-    this.htp_get_chat().subscribe(
-      data => {
-        console.log(data);
-        const list = data.result;
-        for(let i = 0; i < list.length; i++) {
-          this.db_chats.insert(list[i]);
-
-          // set message db
-          const uuid = list[i].uuid;
-          let db_messages = TAFFY();
-          this.messages[uuid] = db_messages;
-
-          // init message db
-          this.init_chatmessage(uuid);
-        }
-      }
-    );
+    this.init_buddy();
+    this.init_chat();
   }
 
   set_authtoken(token: string) {
@@ -103,6 +79,27 @@ export class JadeService {
 
   }
 
+  send_chatmessage(message: string) {
+    const url = this.baseUrl + '/me/chats/' + this.cur_chat + '/messages?authtoken=' + this.authtoken;
+    console.log('url: ' + url);
+
+    const data = {message: message};
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };    
+
+    this.http.post<any>(url, JSON.stringify(data), httpOptions)
+    .pipe(
+      map(data => data),
+      catchError(this.handleError<any>('send_message'))
+    )
+    .subscribe(
+      data => {
+        console.log(data);
+      }
+    );
+  }
+
   private init_chatmessage(uuid:string) {
     this.htp_get_chatmessages(uuid).subscribe(
       data => {
@@ -112,6 +109,76 @@ export class JadeService {
           this.messages[uuid].insert(message_list[j]);
         }
       }
+    );
+  }
+
+  private init_info() {
+    this.htp_get_info().subscribe(
+      data => {
+        console.log(data);
+        this.info = data.result;
+      }
+    )
+  }
+
+  private init_buddy() {
+    this.htp_get_buddy().subscribe(
+      data => {
+        console.log(data);
+        const list = data.result;
+        for(let i = 0; i < list.length; i++) {
+          this.db_buddies.insert(list[i]);
+        }
+      }
+    );
+  }
+
+  private init_chat() {
+    this.htp_get_chat().subscribe(
+      data => {
+        console.log(data);
+        const list = data.result;
+        for(let i = 0; i < list.length; i++) {
+          this.db_chats.insert(list[i]);
+
+          // set message db
+          const uuid = list[i].uuid;
+          let db_messages = TAFFY();
+          this.messages[uuid] = db_messages;
+
+          // init message db
+          this.init_chatmessage(uuid);
+        }
+      }
+    );
+  }
+
+  private init_websock() {
+    console.log('Fired init_websock.');
+
+    console.log('Fired init_websock.');
+
+    this.websock = new $WebSocket(this.websockUrl);
+    this.websock.setSend4Mode(WebSocketSendMode.Direct);
+    this.websock.send('{"type":"subscribe", "topic":"/"}');
+
+    // set received message callback
+    this.websock.onMessage(
+      (msg: MessageEvent) => {
+          console.log('onMessage ', msg.data);
+
+          // get message
+          // {"<topic>": {"<message_name>": {...}}}
+          const j_data = JSON.parse(msg.data);
+          const topic = Object.keys(j_data)[0];
+          const j_msg = j_data[topic];
+
+          // message parse
+          this.message_handler(j_msg);
+
+          // console.log('Received topic. topic ', topic);
+      },
+      {autoApply: false},
     );
   }
 
@@ -181,6 +248,13 @@ export class JadeService {
       map(data => data),
       catchError(this.handleError('get_chat'))
     )
+  }
+
+  private message_handler(j_data) {
+    console.log(j_data);
+
+    const type = Object.keys(j_data)[0];
+    const j_msg = j_data[type];
   }
 
   /**

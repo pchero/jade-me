@@ -30,6 +30,7 @@ export class RoomComponent implements OnInit {
 
   send_message() {
     console.log('Fired send_message. message: ' + this.message);
+    this.jService.send_chatmessage(this.message);
     this.message = '';
   }
 
