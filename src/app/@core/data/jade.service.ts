@@ -23,6 +23,7 @@ export class JadeService {
   private info: any = {};
   private messages: any = {};
   private cur_chat: string = '';
+  private cur_chatroom: string = '';
 
   // database  
   private db_buddies = TAFFY();
@@ -54,6 +55,11 @@ export class JadeService {
     this.cur_chat = uuid;
   }
 
+  set_curchatroom(uuid: string) {
+    console.log('set_curchatroom: ' + uuid);
+    this.cur_chatroom = uuid;
+  }
+
 
   get_info() {
     return this.info;
@@ -61,6 +67,10 @@ export class JadeService {
 
   get_curchat() {
     return this.cur_chat;
+  }
+
+  get_curchatroom() {
+    return this.cur_chatroom;
   }
 
   get_buddies() {
@@ -71,7 +81,15 @@ export class JadeService {
     return this.db_chats;
   }
 
-  get_messages(uuid: string) {
+  get_chat(uuid: string) {
+    console.log('get_chat: ' + uuid);
+    const res = this.db_chats({uuid: uuid}).first();
+    const j_res = JSON.stringify(res);
+
+    return JSON.parse(j_res);
+  }
+
+  get_chatroom_messages(uuid: string) {
     return this.messages[uuid];
   }
 
@@ -100,13 +118,14 @@ export class JadeService {
     );
   }
 
-  private init_chatmessage(uuid:string) {
+  private init_chatmessage(uuid:string, uuid_room: string) {
+    console.log('init_chatmessage. uuid: ' + uuid + ', room_uuid: ' + uuid_room);
     this.htp_get_chatmessages(uuid).subscribe(
       data => {
         console.log(data);
         const message_list = data.result;
         for(let j = 0; j < message_list.length; j++) {
-          this.messages[uuid].insert(message_list[j]);
+          this.messages[uuid_room].insert(message_list[j]);
         }
       }
     );
@@ -138,16 +157,19 @@ export class JadeService {
       data => {
         console.log(data);
         const list = data.result;
-        for(let i = 0; i < list.length; i++) {
-          this.db_chats.insert(list[i]);
-
-          // set message db
+        for(let i = 0; i < list.length; i++) {          
+          
           const uuid = list[i].uuid;
+          const uuid_room = list[i].room.uuid;
+          list[i].uuid_room = uuid_room;
+          this.db_chats.insert(list[i]);
+          
+          // set message db
           let db_messages = TAFFY();
-          this.messages[uuid] = db_messages;
+          this.messages[uuid_room] = db_messages;
 
           // init message db
-          this.init_chatmessage(uuid);
+          this.init_chatmessage(uuid, uuid_room);
         }
       }
     );
@@ -250,13 +272,6 @@ export class JadeService {
     )
   }
 
-  private message_handler(j_data) {
-    console.log(j_data);
-
-    const type = Object.keys(j_data)[0];
-    const j_msg = j_data[type];
-  }
-
   /**
    * Handle Http operation that failed.
    * Let the app continue.
@@ -281,4 +296,27 @@ export class JadeService {
     console.log(message);
   }
 
+
+  /**
+   * Jade notification message handler
+   */
+  private message_handler(j_data) {
+    console.log(j_data);
+
+    const type = Object.keys(j_data)[0];
+    const j_msg = j_data[type];
+
+    if(type === 'me.chats.message.create') {
+      this.message_handler_me_chats_message_create(j_msg);
+    }
+  }
+
+  private message_handler_me_chats_message_create(message: any) {
+    const room_uuid = message['uuid_room'];
+    if(room_uuid == '') {
+      return;
+    }
+
+    this.messages[room_uuid].insert(message);
+  }
 }

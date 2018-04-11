@@ -56,17 +56,19 @@ export class ChatComponent implements OnInit {
   onRowSelect(event): void {
     const detail = Object.assign({}, event.data);
     const uuid = detail.uuid;
+    const room_uuid = detail.uuid_room;
 
     this.jService.set_curchat(uuid);
-
-    // this.route.navigate(['/room']);
+    this.jService.set_curchatroom(room_uuid);
   }
 
   onUserRowSelect(event): void {
     const detail = Object.assign({}, event.data);
     const uuid = detail.uuid;
+    const room_uuid = detail.uuid_room;
 
     this.jService.set_curchat(uuid);
+    this.jService.set_curchatroom(room_uuid);
 
     this.route.navigate(['/pages/room']);
   }

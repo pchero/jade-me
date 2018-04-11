@@ -1,0 +1,30 @@
+<nb-card>
+  <nb-card-header>
+    Call originate
+  </nb-card-header>
+  <nb-card-body>
+    <div class="input-group">
+      <input type="text" class="form-control" [(ngModel)]="destination" placeholder="Call to..">
+      <span class="input-group-btn">
+        <button class="btn btn-success" (click)="originate_bt_call()">
+          Call
+        </button>
+      </span>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+<nb-card>
+  <nb-card-header>
+    My calls
+  </nb-card-header>
+  <nb-card-body>
+    <ng2-smart-table
+      [settings]="list_settings"
+      [source]="list_source"
+      (deleteConfirm)="list_onDeleteConfirm($event)"
+      (rowSelect)="list_onRowSelect($event)"
+    >
+    </ng2-smart-table>  
+  </nb-card-body>
+</nb-card>
