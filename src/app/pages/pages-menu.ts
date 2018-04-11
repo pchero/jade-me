@@ -19,4 +19,16 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/chat',
     home: false,
   },
+  {
+    title: 'Search',
+    icon: 'fa fa-search',
+    link: '/pages/search',
+    home: false,
+  },
+  {
+    title: 'Setting',
+    icon: 'fa fa-cog',
+    link: '/pages/setting',
+    home: false,
+  },
 ];
