@@ -14,7 +14,7 @@ export class CallComponent implements OnInit {
 
   constructor(private jService: JadeService) {
 
-    const db = jService.get_buddies();
+    const db = jService.get_calls();
 
     this.source.load(db().get());
     db.settings({
@@ -34,22 +34,14 @@ export class CallComponent implements OnInit {
       columnTitle: '',
     },
     columns: {
-      uuid: {
-        title: 'Uuid',
+      unique_id: {
+        title: 'Unique id',
         type: 'string',
       },
-      uuid_user: {
-        title: 'Uuid user',
+      channel: {
+        title: 'chanel',
         type: 'string',
       },
-      name: {
-        title: 'Name',
-        type: 'string',
-      },
-      detail: {
-        title: 'Detail',
-        type: 'string',
-      }
     },
   }
 

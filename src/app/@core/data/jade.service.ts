@@ -14,7 +14,7 @@ import {$WebSocket, WebSocketSendMode} from 'angular2-websocket/angular2-websock
 export class JadeService {
   
   private authtoken: string = '';
-  private baseUrl: string = 'https://' + window.location.hostname + ':8081';
+  private baseUrl: string = 'https://' + window.location.hostname + ':8081/v1';
   private websockUrl: string = 'wss://' + window.location.hostname + ':8083';
   // private websock;
   private websock: $WebSocket;
@@ -28,6 +28,7 @@ export class JadeService {
   // database  
   private db_buddies = TAFFY();
   private db_chats = TAFFY();
+  private db_calls = TAFFY();
 
   constructor(private http: HttpClient, private route: Router) {
     console.log("Fired jade.service.");
@@ -44,6 +45,7 @@ export class JadeService {
 
     this.init_buddy();
     this.init_chat();
+    this.init_call();
   }
 
   set_authtoken(token: string) {
@@ -79,6 +81,10 @@ export class JadeService {
 
   get_chats() {
     return this.db_chats;
+  }
+
+  get_calls() {
+    return this.db_calls;
   }
 
   get_chat(uuid: string) {
@@ -123,7 +129,7 @@ export class JadeService {
     this.htp_get_chatmessages(uuid).subscribe(
       data => {
         console.log(data);
-        const message_list = data.result;
+        const message_list = data.result.list;
         for(let j = 0; j < message_list.length; j++) {
           this.messages[uuid_room].insert(message_list[j]);
         }
@@ -144,7 +150,7 @@ export class JadeService {
     this.htp_get_buddy().subscribe(
       data => {
         console.log(data);
-        const list = data.result;
+        const list = data.result.list;
         for(let i = 0; i < list.length; i++) {
           this.db_buddies.insert(list[i]);
         }
@@ -156,7 +162,7 @@ export class JadeService {
     this.htp_get_chat().subscribe(
       data => {
         console.log(data);
-        const list = data.result;
+        const list = data.result.list;
         for(let i = 0; i < list.length; i++) {          
           
           const uuid = list[i].uuid;
@@ -170,6 +176,18 @@ export class JadeService {
 
           // init message db
           this.init_chatmessage(uuid, uuid_room);
+        }
+      }
+    );
+  }
+
+  private init_call() {
+    this.htp_get_call().subscribe(
+      data => {
+        console.log(data);
+        const list = data.result.list;
+        for(let i = 0; i < list.length; i++) {          
+          this.db_calls.insert(list[i]);
         }
       }
     );
@@ -269,6 +287,17 @@ export class JadeService {
     .pipe(
       map(data => data),
       catchError(this.handleError('get_chat'))
+    )
+  }
+
+  /**
+   * Get calls info
+   */
+  private htp_get_call(): Observable<any> {
+    return this.http.get<any>(this.baseUrl + '/me/calls?authtoken=' + this.authtoken)
+    .pipe(
+      map(data => data),
+      catchError(this.handleError('get_call'))
     )
   }
 

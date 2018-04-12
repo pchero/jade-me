@@ -20,10 +20,10 @@
   </nb-card-header>
   <nb-card-body>
     <ng2-smart-table
-      [settings]="list_settings"
-      [source]="list_source"
-      (deleteConfirm)="list_onDeleteConfirm($event)"
-      (rowSelect)="list_onRowSelect($event)"
+      [settings]="settings"
+      [source]="source"
+      (deleteConfirm)="onDeleteConfirm($event)"
+      (rowSelect)="onRowSelect($event)"
     >
     </ng2-smart-table>  
   </nb-card-body>
