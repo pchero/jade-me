@@ -4,17 +4,19 @@ import { LocalDataSource } from 'ng2-smart-table';
 import { JadeService } from '../../@core/data/jade.service';
 
 @Component({
-  selector: 'buddy',
-  templateUrl: './buddy.component.html',
-  styleUrls: ['./buddy.component.scss']
+  selector: 'jade-search',
+  templateUrl: './search.component.html',
+  styleUrls: ['./search.component.scss']
 })
-export class BuddyComponent implements OnInit {
+export class SearchComponent implements OnInit {
 
-  source: LocalDataSource = new LocalDataSource();
+  private source: LocalDataSource = new LocalDataSource();
+  private search_string: string;
+  private detail: any;
 
   constructor(private jService: JadeService) {
-
-    const db = jService.get_buddies();
+    this.detail = {};
+    const db = jService.get_search();
 
     this.source.load(db().get());
     db.settings({
@@ -22,7 +24,7 @@ export class BuddyComponent implements OnInit {
     });
   }
 
-  settings = {
+  private settings = {
     delete: {
       deleteButtonContent: '<i class="nb-trash"></i>',
       confirmDelete: true,
@@ -30,7 +32,7 @@ export class BuddyComponent implements OnInit {
     actions: {
       add: false,
       edit: false,
-      delete: true,
+      delete: false,
       columnTitle: '',
     },
     columns: {
@@ -38,29 +40,31 @@ export class BuddyComponent implements OnInit {
         title: 'Uuid',
         type: 'string',
       },
-      uuid_user: {
-        title: 'Uuid user',
+      username: {
+        title: 'Username',
         type: 'string',
       },
-      name: {
+      cname: {
         title: 'Name',
         type: 'string',
       },
-      detail: {
-        title: 'Detail',
-        type: 'string',
-      }
     },
   }
 
-  onDeleteConfirm(event): void {
-    if (window.confirm('Are you sure you want to delete?')) {
-      this.jService.delete_buddy(event.data.uuid);
-    }
-  };
+  search_bt_user() {
+    console.log('Fired search_bt_user.');
+
+    this.jService.send_search(this.search_string, "username");
+  }
 
   onRowSelect(event): void {
-    
+    this.detail = Object.assign({}, event.data);
+    delete this.detail.___id;
+    delete this.detail.___s;
+  }
+
+  add_buddy_handler(): void {
+    this.jService.add_buddy(this.detail.uuid, this.detail.name, '');
   }
 
   ngOnInit() {

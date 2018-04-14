@@ -29,6 +29,7 @@ export class JadeService {
   private db_buddies = TAFFY();
   private db_chats = TAFFY();
   private db_calls = TAFFY();
+  private db_search = TAFFY();
 
   constructor(private http: HttpClient, private route: Router) {
     console.log("Fired jade.service.");
@@ -103,6 +104,10 @@ export class JadeService {
 
   }
 
+  get_search() {
+    return this.db_search;
+  }
+
   send_chatmessage(message: string) {
     const url = this.baseUrl + '/me/chats/' + this.cur_chat + '/messages?authtoken=' + this.authtoken;
     console.log('url: ' + url);
@@ -116,6 +121,75 @@ export class JadeService {
     .pipe(
       map(data => data),
       catchError(this.handleError<any>('send_message'))
+    )
+    .subscribe(
+      data => {
+        console.log(data);
+      }
+    );
+  }
+
+  send_search(filter: string, type: string) {
+    const url = this.baseUrl + '/me/search' + '?authtoken=' + this.authtoken + '&filter=' + filter + '&type=' + type;
+
+    // clear search db
+    this.db_search().remove();
+
+    this.http.get<any>(url)
+    .pipe(
+      map(data => data),
+      catchError(this.handleError('get_call'))
+    )
+    .subscribe(
+      data => {
+        console.log(data);
+
+        const data_list = data.result.list;
+        for(let i = 0; i <data_list.length; i++) {
+          this.db_search.insert(data_list[i]);
+        }
+      }
+    );
+  }
+
+  add_buddy(uuid: string, name: string=null, detail: string=null) {
+    const url = this.baseUrl + '/me/buddies?authtoken=' + this.authtoken;
+
+    const data = {uuid_user: uuid};
+    if(name != null) {
+      data['name'] = name;
+    }
+    if(detail != null) {
+      data['detail'] = detail;
+    }
+
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };    
+
+    this.http.post<any>(url, JSON.stringify(data), httpOptions)
+    .pipe(
+      map(data => data),
+      catchError(this.handleError<any>('add_buddy'))
+    )
+    .subscribe(
+      data => {
+        console.log(data);
+      }
+    );
+  }
+
+  delete_buddy(uuid: string) {
+    const url = this.baseUrl + '/me/buddies/' + uuid + '?authtoken=' + this.authtoken;
+
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };    
+
+    this.http.delete<any>(url, httpOptions)
+    .pipe(
+      map(data => data),
+      catchError(this.handleError<any>('add_buddy'))
     )
     .subscribe(
       data => {
@@ -301,6 +375,7 @@ export class JadeService {
     )
   }
 
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.
@@ -325,7 +400,6 @@ export class JadeService {
     console.log(message);
   }
 
-
   /**
    * Jade notification message handler
    */
@@ -338,14 +412,38 @@ export class JadeService {
     if(type === 'me.chats.message.create') {
       this.message_handler_me_chats_message_create(j_msg);
     }
+    else if(type === 'me.buddies.create') {
+      this.message_handler_me_buddies_create(j_msg);
+    }
+    else if(type === 'me.buddies.delete') {
+      this.message_handler_me_buddies_delete(j_msg);
+    }
+    else if(type === 'me.buddies.update') {
+      this.message_handler_me_buddies_update(j_msg);
+    }
   }
 
-  private message_handler_me_chats_message_create(message: any) {
-    const room_uuid = message['uuid_room'];
+  private message_handler_me_chats_message_create(j_msg: any) {
+    const room_uuid = j_msg['uuid_room'];
     if(room_uuid == '') {
       return;
     }
-
-    this.messages[room_uuid].insert(message);
+    this.messages[room_uuid].insert(j_msg);
   }
+
+  private message_handler_me_buddies_create(j_msg: any) {
+    this.db_buddies.insert(j_msg);
+  }
+
+  private message_handler_me_buddies_delete(j_msg: any) {
+    const uuid = j_msg['uuid'];
+    this.db_buddies({uuid: uuid}).remove();
+  }
+
+  private message_handler_me_buddies_update(j_msg: any) {
+    const uuid = j_msg['uuid'];
+    this.db_buddies({uuid: uuid}).update(j_msg);
+  }
+
+
 }

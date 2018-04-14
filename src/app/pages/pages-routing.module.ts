@@ -6,6 +6,7 @@ import { BuddyComponent } from './buddy/buddy.component';
 import { ChatComponent } from './chat/chat.component';
 import { RoomComponent } from './room/room.component';
 import { CallComponent } from './call/call.component';
+import { SearchComponent } from './search/search.component';
 
 const routes: Routes = [{
   path: '',
@@ -28,8 +29,12 @@ const routes: Routes = [{
       component: CallComponent,
     },
     {
+      path: 'search',
+      component: SearchComponent,
+    },
+    {
       path: '',
-      redirectTo: 'dashboard',
+      redirectTo: 'call',
       pathMatch: 'full',
     }
   ],
