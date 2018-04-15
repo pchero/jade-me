@@ -42,6 +42,31 @@ export class RoomComponent implements OnInit {
     this.message = '';
   }
 
+  send_handler() {
+    this.send_message();
+  }
+
+  call_handler() {
+    const uuid = this.info.uuid;
+    
+    // get target uuid
+    let target = '';
+    const j_members = this.chat_info.room.members;
+    for(let i = 0; i < j_members.length; i++) {
+      target = j_members[i];
+      if(target != uuid) {
+        break;
+      }
+    }
+    console.log(j_members);
+
+    if(target == '') {
+      return;
+    }
+
+    this.jService.send_call(target, "user");
+  }
+
   ngOnInit() {
   }
 

@@ -167,6 +167,29 @@ export class JadeService {
     );
   }
 
+  send_call(destination: string, type: string) {
+    const url = this.baseUrl + '/me/calls?authtoken=' + this.authtoken;
+
+    const j_data = {
+      destination_type: type,
+      destination: destination
+    }
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };    
+
+    this.http.post<any>(url, JSON.stringify(j_data), httpOptions)
+    .pipe(
+      map(data => data),
+      catchError(this.handleError<any>('add_buddy'))
+    )
+    .subscribe(
+      data => {
+        console.log(data);
+      }
+    );
+  }
+
   add_buddy(uuid: string, name: string=null, detail: string=null) {
     const url = this.baseUrl + '/me/buddies?authtoken=' + this.authtoken;
 
