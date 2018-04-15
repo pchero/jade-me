@@ -13,7 +13,7 @@ export class ChatComponent implements OnInit {
   
   source: LocalDataSource = new LocalDataSource();
 
-  settings = {
+  private settings = {
     delete: {
       deleteButtonContent: '<i class="nb-trash"></i>',
       confirmDelete: true,
@@ -53,23 +53,30 @@ export class ChatComponent implements OnInit {
   ngOnInit() {
   }
 
-  onRowSelect(event): void {
+  private onRowSelect(event): void {
     const detail = Object.assign({}, event.data);
     const uuid = detail.uuid;
-    const room_uuid = detail.uuid_room;
+    const room_uuid = detail.room.uuid;
 
     this.jService.set_curchat(uuid);
     this.jService.set_curchatroom(room_uuid);
   }
 
-  onUserRowSelect(event): void {
+  private onUserRowSelect(event): void {
     const detail = Object.assign({}, event.data);
     const uuid = detail.uuid;
-    const room_uuid = detail.uuid_room;
+    const room_uuid = detail.room.uuid
 
     this.jService.set_curchat(uuid);
     this.jService.set_curchatroom(room_uuid);
 
     this.route.navigate(['/pages/room']);
   }
+
+  private onDeleteConfirm(event): void {
+    if (window.confirm('Are you sure you want to delete?')) {
+      this.jService.delete_chat(event.data.uuid);
+    }
+  };
+
 }

@@ -10,10 +10,11 @@ import { JadeService } from '../../@core/data/jade.service';
 })
 export class BuddyComponent implements OnInit {
 
-  source: LocalDataSource = new LocalDataSource();
+  private source: LocalDataSource = new LocalDataSource();
+  private detail: any;
 
   constructor(private jService: JadeService) {
-
+    this.detail = {};
     const db = jService.get_buddies();
 
     this.source.load(db().get());
@@ -22,7 +23,7 @@ export class BuddyComponent implements OnInit {
     });
   }
 
-  settings = {
+  private settings = {
     delete: {
       deleteButtonContent: '<i class="nb-trash"></i>',
       confirmDelete: true,
@@ -53,14 +54,26 @@ export class BuddyComponent implements OnInit {
     },
   }
 
-  onDeleteConfirm(event): void {
+  private onDeleteConfirm(event): void {
     if (window.confirm('Are you sure you want to delete?')) {
       this.jService.delete_buddy(event.data.uuid);
     }
   };
 
-  onRowSelect(event): void {
-    
+  private onRowSelect(event): void {
+    this.detail = event.data;
+  }
+
+  private chat_handler(): void {
+    const info = this.jService.get_info();
+    const uuid = info.uuid;
+    const buddy_uuid = this.detail.uuid_user;
+
+    const members = [uuid, buddy_uuid];
+    const name = 'My chat';
+    const detail = 'Chat with ' + info.name + ', ' + this.detail.name;
+
+    this.jService.add_chat(name, detail, 1, members);
   }
 
   ngOnInit() {

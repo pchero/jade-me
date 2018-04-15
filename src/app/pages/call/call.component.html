@@ -4,7 +4,7 @@
   </nb-card-header>
   <nb-card-body>
     <div class="input-group">
-      <input type="text" class="form-control" [(ngModel)]="destination" placeholder="Call to..">
+      <input type="text" class="form-control" [(ngModel)]="destination" (keyup.enter)="originate_bt_call()" placeholder="Call to..">
       <span class="input-group-btn">
         <button class="btn btn-success" (click)="originate_bt_call()">
           Call
@@ -27,4 +27,54 @@
     >
     </ng2-smart-table>  
   </nb-card-body>
+</nb-card>
+
+<nb-card>
+  <nb-card-header>
+    Call detail
+  </nb-card-header>
+
+  <nb-card-body>
+
+    <div class="row">
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="id">ID</label>
+          <input type="text" readonly="true" [(ngModel)]="detail.id" class="form-control" id="id" placeholder="ID">
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="type">Direction</label>
+          <input type="text" readonly="true" [(ngModel)]="detail.type" class="form-control" id="type" placeholder="Dicrection">
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="source">Source</label>
+          <input type="text" readonly="true" [(ngModel)]="detail.from" class="form-control" id="source" placeholder="Source">
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="destination">Destination</label>
+          <input type="text" readonly="true" [(ngModel)]="detail.to" class="form-control" id="destination" placeholder="Destination">
+        </div>
+      </div>
+
+    </div>
+      
+  </nb-card-body>
+
+  <nb-card-footer>
+    <div class="col-sm-9">
+      <button class="btn btn-success" (click)="answer_handler()">Answer</button>
+      <button class="btn btn-danger" (click)="hangup_handler()">Hangup</button>
+    </div>
+  </nb-card-footer>
+
 </nb-card>

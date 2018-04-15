@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import { catchError, map } from 'rxjs/operators';
@@ -9,6 +9,7 @@ import * as TAFFY from 'taffy';
 // import * as io from 'socket.io-client';
 import {$WebSocket, WebSocketSendMode} from 'angular2-websocket/angular2-websocket';
 
+import { SipService } from './sip.service';
 
 @Injectable()
 export class JadeService {
@@ -19,8 +20,8 @@ export class JadeService {
   // private websock;
   private websock: $WebSocket;
 
-
   private info: any = {};
+  private contacts: any = {};
   private messages: any = {};
   private cur_chat: string = '';
   private cur_chatroom: string = '';
@@ -29,9 +30,10 @@ export class JadeService {
   private db_buddies = TAFFY();
   private db_chats = TAFFY();
   private db_calls = TAFFY();
+  private db_sipcalls = TAFFY();
   private db_search = TAFFY();
 
-  constructor(private http: HttpClient, private route: Router) {
+  constructor(private http: HttpClient, private sipService: SipService, private route: Router, private injector:Injector) {
     console.log("Fired jade.service.");
 
     if(this.authtoken === '') {
@@ -47,6 +49,7 @@ export class JadeService {
     this.init_buddy();
     this.init_chat();
     this.init_call();
+    this.init_contact();
   }
 
   set_authtoken(token: string) {
@@ -68,12 +71,20 @@ export class JadeService {
     return this.info;
   }
 
+  get_my_uuid() {
+    return this.info.uuid;
+  }
+
   get_curchat() {
     return this.cur_chat;
   }
 
   get_curchatroom() {
     return this.cur_chatroom;
+  }
+
+  get_contact() {
+    return this.contacts;
   }
 
   get_buddies() {
@@ -86,6 +97,10 @@ export class JadeService {
 
   get_calls() {
     return this.db_calls;
+  }
+
+  get_sipcalls() {
+    return this.db_sipcalls;
   }
 
   get_chat(uuid: string) {
@@ -198,6 +213,55 @@ export class JadeService {
     );
   }
 
+  delete_chat(uuid: string) {
+    const url = this.baseUrl + '/me/chats/' + uuid + '?authtoken=' + this.authtoken;
+
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };    
+
+    this.http.delete<any>(url, httpOptions)
+    .pipe(
+      map(data => data),
+      catchError(this.handleError<any>('add_buddy'))
+    )
+    .subscribe(
+      data => {
+        console.log(data);
+      }
+    );
+  }
+
+  add_sipcall(call) {
+    this.db_sipcalls.insert(call);
+  }
+
+  add_chat(name: string, detail: string, type: number, members: any) {
+    const url = this.baseUrl + '/me/chats?authtoken=' + this.authtoken;
+
+    const j_data = {
+      name: name,
+      detail: detail,
+      type: type,
+      members: members
+    };
+
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };    
+
+    this.http.post<any>(url, JSON.stringify(j_data), httpOptions)
+    .pipe(
+      map(data => data),
+      catchError(this.handleError<any>('add_chat'))
+    )
+    .subscribe(
+      data => {
+        console.log(data);
+      }
+    );
+  }
+
   private init_chatmessage(uuid:string, uuid_room: string) {
     console.log('init_chatmessage. uuid: ' + uuid + ', room_uuid: ' + uuid_room);
     this.htp_get_chatmessages(uuid).subscribe(
@@ -240,13 +304,12 @@ export class JadeService {
         for(let i = 0; i < list.length; i++) {          
           
           const uuid = list[i].uuid;
-          const uuid_room = list[i].room.uuid;
-          list[i].uuid_room = uuid_room;
           this.db_chats.insert(list[i]);
+        
+          const uuid_room = list[i].room.uuid;
           
           // set message db
-          let db_messages = TAFFY();
-          this.messages[uuid_room] = db_messages;
+          this.create_message_db(uuid_room);
 
           // init message db
           this.init_chatmessage(uuid, uuid_room);
@@ -268,8 +331,6 @@ export class JadeService {
   }
 
   private init_websock() {
-    console.log('Fired init_websock.');
-
     console.log('Fired init_websock.');
 
     this.websock = new $WebSocket(this.websockUrl);
@@ -296,6 +357,21 @@ export class JadeService {
     );
   }
 
+  private init_contact() {
+    console.log('Fired init_contact.');
+
+    this.htp_get_contact().subscribe(
+      data => {
+        console.log(data);
+
+        this.contacts = data.result.list;
+
+        // sip login
+        this.sipService.init(this.db_sipcalls, this.contacts[0].info.id, this.contacts[0].info.password);
+      }
+    );
+  }
+
   /**
    * Get chat message of given room uuid.
    * @param uuid 
@@ -314,6 +390,18 @@ export class JadeService {
       map(data => data),
       catchError(this.handleError('get_chatmessages', []))
     );
+  }
+
+  private create_message_db(uuid_room: string) {
+    if(this.messages[uuid_room] == null) {
+      console.log("Create message db. " + uuid_room);
+      let db_messages = TAFFY();
+      this.messages[uuid_room] = db_messages;
+    }
+  }
+
+  private delete_message_db(uuid_room: string) {
+    delete this.messages[uuid_room];
   }
 
   /**
@@ -375,6 +463,16 @@ export class JadeService {
     )
   }
 
+  /**
+   * Get contacts info
+   */
+  private htp_get_contact(): Observable<any> {
+    return this.http.get<any>(this.baseUrl + '/me/contacts?authtoken=' + this.authtoken)
+    .pipe(
+      map(data => data),
+      catchError(this.handleError('get_contact'))
+    )
+  }
 
   /**
    * Handle Http operation that failed.
@@ -421,6 +519,12 @@ export class JadeService {
     else if(type === 'me.buddies.update') {
       this.message_handler_me_buddies_update(j_msg);
     }
+    else if(type === 'me.chats.room.create') {
+      this.message_handler_me_chats_room_create(j_msg);
+    }
+    else if(type === 'me.chats.room.delete') {
+      this.message_handler_me_chats_room_delete(j_msg);
+    }
   }
 
   private message_handler_me_chats_message_create(j_msg: any) {
@@ -443,6 +547,20 @@ export class JadeService {
   private message_handler_me_buddies_update(j_msg: any) {
     const uuid = j_msg['uuid'];
     this.db_buddies({uuid: uuid}).update(j_msg);
+  }
+
+  private message_handler_me_chats_room_create(j_msg: any) {
+    this.db_chats.insert(j_msg);
+    this.create_message_db(j_msg.room.uuid);
+    console.log("Create chat room. " + j_msg.room.uuid);
+  }
+
+  private message_handler_me_chats_room_delete(j_msg: any) {
+    const uuid = j_msg['uuid'];
+    this.db_chats({uuid: uuid}).remove(j_msg);
+    this.delete_message_db(j_msg.room.uuid);
+
+    console.log("Delete chat room. " + j_msg.room.uuid);
   }
 
 

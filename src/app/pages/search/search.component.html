@@ -4,7 +4,7 @@
   </nb-card-header>
   <nb-card-body>
     <div class="input-group">
-      <input type="text" class="form-control" [(ngModel)]="search_string" placeholder="Search user">
+      <input type="text" class="form-control" [(ngModel)]="search_string" (keyup.enter)="search_bt_user()" placeholder="Search user">
       <span class="input-group-btn">
         <button class="btn btn-success" (click)="search_bt_user()">
           Search

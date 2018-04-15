@@ -7,6 +7,7 @@ import { StateService } from './state.service';
 import { SmartTableService } from './smart-table.service';
 import { PlayerService } from './player.service';
 import { JadeService } from './jade.service';
+import { SipService } from './sip.service';
 
 const SERVICES = [
   UserService,
@@ -15,6 +16,7 @@ const SERVICES = [
   SmartTableService,
   PlayerService,
   JadeService,
+  SipService,
 ];
 
 @NgModule({

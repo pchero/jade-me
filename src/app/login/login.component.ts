@@ -28,7 +28,6 @@ export class LoginComponent implements OnInit {
 
         // init
         this.jService.init();
-
         this.route.navigate(['/']);
       }
     );
