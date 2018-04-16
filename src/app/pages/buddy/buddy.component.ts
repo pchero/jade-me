@@ -64,6 +64,12 @@ export class BuddyComponent implements OnInit {
     this.detail = event.data;
   }
 
+  private update_handler(): void {
+    const data = {name: this.detail.name, detail: this.detail.detail};
+
+    this.jService.update_buddy(this.detail.uuid, data);
+  }
+
   private chat_handler(): void {
     const info = this.jService.get_info();
     const uuid = info.uuid;

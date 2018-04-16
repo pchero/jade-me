@@ -217,6 +217,25 @@ export class JadeService {
     );
   }
 
+  update_buddy(uuid: string, data: any) {
+    const url = this.baseUrl + '/me/buddies/' + uuid + '?authtoken=' + this.authtoken;
+
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };    
+
+    this.http.put<any>(url, JSON.stringify(data), httpOptions)
+    .pipe(
+      map(data => data),
+      catchError(this.handleError<any>('update_buddy'))
+    )
+    .subscribe(
+      data => {
+        console.log(data);
+      }
+    );
+  }
+
   delete_buddy(uuid: string) {
     const url = this.baseUrl + '/me/buddies/' + uuid + '?authtoken=' + this.authtoken;
 
@@ -227,7 +246,7 @@ export class JadeService {
     this.http.delete<any>(url, httpOptions)
     .pipe(
       map(data => data),
-      catchError(this.handleError<any>('add_buddy'))
+      catchError(this.handleError<any>('delete_buddy'))
     )
     .subscribe(
       data => {
