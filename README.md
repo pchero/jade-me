@@ -1,6 +1,11 @@
 ## jade-me
 The jade-me is a simple user tool for jade.
 
+## Features
+* Chat function.
+* Buddy function.
+* Voice call(WebRTC/JsSip)
+
 ## Installing
 Required jade(https://github.com/pchero/jade).
 
