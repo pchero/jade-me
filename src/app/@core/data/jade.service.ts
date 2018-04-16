@@ -358,10 +358,8 @@ export class JadeService {
     const url = this.websockUrl + '?authtoken=' + this.authtoken;
     console.log("Connecting websocket. url: " + url);
 
-    // this.websock = new $WebSocket(this.websockUrl);
+    // init websocket
     this.websock = new $WebSocket(url);
-    this.websock.setSend4Mode(WebSocketSendMode.Direct);
-    this.websock.send('{"type":"subscribe", "topic":"/"}');
 
     // set received message callback
     this.websock.onMessage(
@@ -376,8 +374,6 @@ export class JadeService {
 
           // message parse
           this.message_handler(j_msg);
-
-          // console.log('Received topic. topic ', topic);
       },
       {autoApply: false},
     );
