@@ -355,8 +355,11 @@ export class JadeService {
 
   private init_websock() {
     console.log('Fired init_websock.');
+    const url = this.websockUrl + '?authtoken=' + this.authtoken;
+    console.log("Connecting websocket. url: " + url);
 
-    this.websock = new $WebSocket(this.websockUrl);
+    // this.websock = new $WebSocket(this.websockUrl);
+    this.websock = new $WebSocket(url);
     this.websock.setSend4Mode(WebSocketSendMode.Direct);
     this.websock.send('{"type":"subscribe", "topic":"/"}');
 
