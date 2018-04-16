@@ -186,6 +186,11 @@ export class Call {
 
   private on_failed(e) {
     console.log("Fired on_failed.");
+
+    this.status = 'finished';
+    
+    // delete call
+    this.db_delete();
   }
 
   private on_hold(e) {
