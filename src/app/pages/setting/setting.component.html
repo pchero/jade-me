@@ -1,0 +1,47 @@
+
+<nb-card>
+  <nb-card-header>
+    Setting
+  </nb-card-header>
+
+  <nb-card-body>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="uuid">UUID</label>
+          <input type="text" readonly="true" [(ngModel)]="detail.uuid" class="form-control" id="uuid" placeholder="UUID">
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" readonly="true" [(ngModel)]="detail.username" class="form-control" id="username" placeholder="Username">
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="text" [(ngModel)]="detail.password" class="form-control" id="password" placeholder="Password">
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" [(ngModel)]="detail.name" class="form-control" id="name" placeholder="Name">
+        </div>
+      </div>
+
+    </div>
+      
+  </nb-card-body>
+
+  <nb-card-footer>
+    <div class="col-sm-9">
+      <button class="btn btn-success" (click)="update_handler()">Update</button>
+    </div>
+  </nb-card-footer>
+
+</nb-card>

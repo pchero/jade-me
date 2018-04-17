@@ -85,6 +85,26 @@ export class JadeService {
     return this.info;
   }
 
+  update_info(data: any) {
+    const url = this.baseUrl + '/me/info?authtoken=' + this.authtoken;
+
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };    
+
+    this.http.put<any>(url, JSON.stringify(data), httpOptions)
+    .pipe(
+      map(data => data),
+      catchError(this.handleError<any>('update_info'))
+    )
+    .subscribe(
+      data => {
+        console.log(data);
+      }
+    );
+
+  }
+
   get_my_uuid() {
     return this.info.uuid;
   }
@@ -623,6 +643,13 @@ export class JadeService {
     else if(type === 'me.chats.delete') {
       this.message_handler_me_chats_room_delete(j_msg);
     }
+    else if(type === 'me.info.update') {
+      this.message_handler_me_info_update(j_msg);
+    }
+    else {
+      console.error("Could not find correct message handler.");
+    }
+
   }
 
   private message_handler_me_chats_message_create(j_msg: any) {
@@ -664,6 +691,14 @@ export class JadeService {
     this.delete_message_db(j_msg.room.uuid);
 
     console.log("Delete chat room. " + j_msg.room.uuid);
+  }
+
+  private message_handler_me_info_update(j_msg: any) {
+
+    for(var k in j_msg) {
+      this.info[k] = j_msg[k];
+    }
+    console.log('Updated info. ' + this.info.name);
   }
 
 

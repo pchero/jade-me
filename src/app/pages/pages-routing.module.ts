@@ -7,6 +7,7 @@ import { ChatComponent } from './chat/chat.component';
 import { RoomComponent } from './room/room.component';
 import { CallComponent } from './call/call.component';
 import { SearchComponent } from './search/search.component';
+import { SettingComponent } from './setting/setting.component';
 
 const routes: Routes = [{
   path: '',
@@ -31,6 +32,10 @@ const routes: Routes = [{
     {
       path: 'search',
       component: SearchComponent,
+    },
+    {
+      path: 'setting',
+      component: SettingComponent,
     },
     {
       path: '',

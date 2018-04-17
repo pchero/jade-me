@@ -8,6 +8,7 @@ import { ChatComponent } from './chat/chat.component';
 import { RoomComponent } from './room/room.component';
 import { CallComponent } from './call/call.component';
 import { SearchComponent } from './search/search.component';
+import { SettingComponent } from './setting/setting.component';
 
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 
@@ -29,6 +30,7 @@ const PAGES_COMPONENTS = [
     RoomComponent,
     CallComponent,
     SearchComponent,
+    SettingComponent,
   ],
   providers: [
   ],
