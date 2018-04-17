@@ -14,3 +14,61 @@
       </ng2-smart-table>
   </nb-card-body>
 </nb-card>
+
+<nb-card>
+    <nb-card-header>
+      Chat detail
+    </nb-card-header>
+  
+    <nb-card-body>
+  
+      <div class="row">
+  
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="uuid">UUID</label>
+            <input type="text" readonly="true" [(ngModel)]="detail.uuid" class="form-control" id="uuid" placeholder="UUID">
+          </div>
+        </div>
+    
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" [(ngModel)]="detail.name" class="form-control" id="name" placeholder="Name">
+          </div>
+        </div>
+  
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="detail">Detail</label>
+            <input type="text" [(ngModel)]="detail.detail" class="form-control" id="detail" placeholder="Detail">
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label>Members</label>
+            <div *ngIf="detail.room;else other">
+              <select multiple class="form-control">
+                <option *ngFor="let m of detail.room.members">{{m}}</option>
+              </select>
+            </div>
+            <ng-template #other>
+              <select multiple class="form-control">
+              </select>
+            </ng-template>
+          </div>
+        </div>
+          
+      </div>
+        
+    </nb-card-body>
+  
+    <nb-card-footer>
+      <div class="col-sm-9">
+        <button class="btn btn-success" (click)="update_handler()">Update info</button>
+        <button class="btn btn-info" (click)="chat_handler()">Chatting</button>
+      </div>
+    </nb-card-footer>
+  
+  </nb-card>

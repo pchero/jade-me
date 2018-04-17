@@ -265,7 +265,26 @@ export class JadeService {
     this.http.delete<any>(url, httpOptions)
     .pipe(
       map(data => data),
-      catchError(this.handleError<any>('add_buddy'))
+      catchError(this.handleError<any>('delete_chat'))
+    )
+    .subscribe(
+      data => {
+        console.log(data);
+      }
+    );
+  }
+
+  update_chat(uuid: string, data: any) {
+    const url = this.baseUrl + '/me/chats/' + uuid + '?authtoken=' + this.authtoken;
+
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };    
+
+    this.http.put<any>(url, JSON.stringify(data), httpOptions)
+    .pipe(
+      map(data => data),
+      catchError(this.handleError<any>('update_chat'))
     )
     .subscribe(
       data => {
@@ -560,10 +579,13 @@ export class JadeService {
     else if(type === 'me.buddies.update') {
       this.message_handler_me_buddies_update(j_msg);
     }
-    else if(type === 'me.chats.room.create') {
+    else if(type === 'me.chats.create') {
       this.message_handler_me_chats_room_create(j_msg);
     }
-    else if(type === 'me.chats.room.delete') {
+    else if(type === 'me.chats.update') {
+      this.message_handler_me_chats_room_update(j_msg);
+    }
+    else if(type === 'me.chats.delete') {
       this.message_handler_me_chats_room_delete(j_msg);
     }
   }
@@ -594,6 +616,11 @@ export class JadeService {
     this.db_chats.insert(j_msg);
     this.create_message_db(j_msg.room.uuid);
     console.log("Create chat room. " + j_msg.room.uuid);
+  }
+
+  private message_handler_me_chats_room_update(j_msg: any) {
+    const uuid = j_msg['uuid'];
+    this.db_chats({uuid: uuid}).update(j_msg);
   }
 
   private message_handler_me_chats_room_delete(j_msg: any) {

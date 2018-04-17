@@ -4,7 +4,6 @@
   </nb-card-header>
         
   <nb-card-body>
-    <!-- <div class="msg-list" #list [scrollTop]="list.scrollHeight"> -->
 
     <div class="msg-list" #list [scrollTop]="list.scrollHeight">
 
@@ -18,12 +17,6 @@
     </div>
     
     <div class="input-group">
-      <!-- <div class="dropdown input-group-btn" ngbDropdown>
-        <button type="button" class="btn btn-success dropdown-toggle" ngbDropdownToggle>...</button>
-        <ul class="dropdown-menu" ngbDropdownMenu>
-          <li class="dropdown-item">Call</li>
-        </ul>
-      </div> -->
       <input type="text" class="form-control" placeholder="type message" (keyup.enter)="send_message()" [(ngModel)] = 'message'>
       <button class="btn btn-success" (click)="send_handler()">
         Send

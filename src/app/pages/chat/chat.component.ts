@@ -12,11 +12,19 @@ import { Router } from '@angular/router';
 export class ChatComponent implements OnInit {
   
   source: LocalDataSource = new LocalDataSource();
+  detail: any;
 
   private settings = {
+    mode: "inline",
     delete: {
       deleteButtonContent: '<i class="nb-trash"></i>',
       confirmDelete: true,
+    },
+    edit: {
+      editButtonContent: '<i class="nb-edit"></i>',
+      saveButtonContent: '<i class="nb-checkmark"></i>',
+      cancelButtonContent: '<i class="nb-close"></i>',
+      confirmSave: true,
     },
     actions: {
       add: false,
@@ -28,6 +36,7 @@ export class ChatComponent implements OnInit {
       uuid: {
         title: 'Uuid',
         type: 'string',
+        editable: false,
       },
       name: {
         title: 'Name',
@@ -41,6 +50,7 @@ export class ChatComponent implements OnInit {
   }
 
   constructor(private jService: JadeService, private route: Router) {
+    this.detail = {};
 
     const db = jService.get_chats();
 
@@ -54,29 +64,43 @@ export class ChatComponent implements OnInit {
   }
 
   private onRowSelect(event): void {
-    const detail = Object.assign({}, event.data);
-    const uuid = detail.uuid;
-    const room_uuid = detail.room.uuid;
+    this.detail = Object.assign({}, event.data);
+    const uuid = this.detail.uuid;
+    const room_uuid = this.detail.room.uuid;
 
     this.jService.set_curchat(uuid);
     this.jService.set_curchatroom(room_uuid);
   }
 
   private onUserRowSelect(event): void {
-    const detail = Object.assign({}, event.data);
-    const uuid = detail.uuid;
-    const room_uuid = detail.room.uuid
+    this.detail = Object.assign({}, event.data);
+    const uuid = this.detail.uuid;
+    const room_uuid = this.detail.room.uuid
 
     this.jService.set_curchat(uuid);
     this.jService.set_curchatroom(room_uuid);
 
-    this.route.navigate(['/pages/room']);
+    // this.route.navigate(['/pages/room']);
   }
 
   private onDeleteConfirm(event): void {
     if (window.confirm('Are you sure you want to delete?')) {
       this.jService.delete_chat(event.data.uuid);
     }
-  };
+  }
+
+  private update_handler(): void {
+
+    const data = {
+      name: this.detail.name,
+      detail: this.detail.detail,
+    };
+
+    this.jService.update_chat(this.detail.uuid, data);
+  }
+
+  private chat_handler(): void {
+    this.route.navigate(['/pages/room']);
+  }
 
 }
