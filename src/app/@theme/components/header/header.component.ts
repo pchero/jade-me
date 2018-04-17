@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { NbMenuService, NbSidebarService } from '@nebular/theme';
-import { UserService } from '../../../@core/data/users.service';
 import { AnalyticsService } from '../../../@core/utils/analytics.service';
+import { JadeService } from '../../../@core/data/jade.service';
+
 
 @Component({
   selector: 'ngx-header',
@@ -16,17 +17,19 @@ export class HeaderComponent implements OnInit {
 
   user: any;
 
-  userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
+  userMenu = [
+    { title: 'Logout', link: '/logout' },
+  ];
 
   constructor(private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
-              private userService: UserService,
-              private analyticsService: AnalyticsService) {
+              private jService: JadeService
+              ) {
   }
 
   ngOnInit() {
-    this.userService.getUsers()
-      .subscribe((users: any) => this.user = users.nick);
+    console.log('Fired service info' + this.jService.get_info());
+    this.user = this.jService.get_info();
   }
 
   toggleSidebar(): boolean {
@@ -43,7 +46,8 @@ export class HeaderComponent implements OnInit {
     this.menuService.navigateHome();
   }
 
-  startSearch() {
-    this.analyticsService.trackEvent('startSearch');
+  onMenuClick(event) {
+    console.log("Fired onMenuClick. " + event);
   }
+
 }

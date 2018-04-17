@@ -26,9 +26,18 @@ export class LoginComponent implements OnInit {
         // set authtoken
         this.jService.set_authtoken(token);
 
-        // init
-        this.jService.init();
-        this.route.navigate(['/']);
+        // get info
+        this.jService.init().subscribe(
+          res => {
+            if(res != true) {
+              console.log("Could not login correctly.");
+              return;
+            }
+            
+            // move to main page
+            this.route.navigate(['/']);
+          }
+        );
       }
     );
   }

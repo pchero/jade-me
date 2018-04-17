@@ -41,15 +41,29 @@ export class JadeService {
     }
   }
 
-  init() {
-    // keep the init order.
-    this.init_info();
-    this.init_websock();
+  init(): Observable<boolean> {
 
-    this.init_buddy();
-    this.init_chat();
-    this.init_call();
-    this.init_contact();
+    let observable = Observable.create(observer => {
+      this.htp_get_info().subscribe(
+        data => {
+          console.log(data);
+          this.info = data.result;
+          
+          // keep the init order.
+          this.init_websock();
+
+          this.init_buddy();
+          this.init_chat();
+          this.init_call();
+          this.init_contact();
+    
+          observer.next(true);
+          observer.complete();    
+        }
+      )      
+    });
+    
+    return observable;
   }
 
   set_authtoken(token: string) {
@@ -480,6 +494,27 @@ export class JadeService {
         map(data => data),
         catchError(this.handleError<any>('login'))
       );
+  }
+
+  logout() {
+    const url = this.baseUrl + '/me/login?authtoken=' + this.authtoken;
+
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+
+    return this.http.delete<any>(url, httpOptions)
+      .pipe(
+        map(data => data),
+        catchError(this.handleError<any>('logout'))
+      )
+      .subscribe(
+        data => {
+          console.log(data);
+          this.authtoken = '';
+        }
+      );
+
   }
   
   private htp_get_info(): Observable<any> {

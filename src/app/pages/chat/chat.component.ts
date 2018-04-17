@@ -79,8 +79,6 @@ export class ChatComponent implements OnInit {
 
     this.jService.set_curchat(uuid);
     this.jService.set_curchatroom(room_uuid);
-
-    // this.route.navigate(['/pages/room']);
   }
 
   private onDeleteConfirm(event): void {
