@@ -64,6 +64,7 @@
     "ng2-smart-table": "1.2.2",
     "ng2-tree": "2.0.0-rc.4",
     "ngx-echarts": "2.0.1",
+    "node-sass": "^4.8.1",
     "normalize.css": "6.0.0",
     "npm": "^5.6.0",
     "pace-js": "1.0.2",
