@@ -53,7 +53,7 @@ export class RoomComponent implements OnInit {
     let target = '';
     const j_members = this.chat_info.room.members;
     for(let i = 0; i < j_members.length; i++) {
-      target = j_members[i];
+      target = j_members[i].uuid;
       if(target != uuid) {
         break;
       }

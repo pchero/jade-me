@@ -48,11 +48,13 @@ export class Call {
     if (this.type === 'IN') {
       this.from = this.session.remote_identity.uri.user;
       this.to = this.session.local_identity.uri.user;
-      // this.to = 'me';
+
+      this.set_remote_audio_src('../../../assets/sounds/ringtone_iphone.mp3', true);
     }
     else if (this.type === 'OUT') {
       this.from = this.session.local_identity.uri.user;
       this.to = this.session.remote_identity.uri.user;
+      
     }
 
     session.on('addstream', (e) => this.on_addstream(e));
@@ -72,12 +74,35 @@ export class Call {
     return this.session;
   }
 
-  private set_remote_audio(stream) {
+  private stop_remote_audio() {
+    this.remote_audio.pause();
+    this.remote_audio.currentTime = 0;
+  }
+
+  private set_remote_audio_stream(stream) {
     console.log("Fired set_localstream")
     this.remote_audio = new Audio();
     this.remote_audio.srcObject = stream;
     this.remote_audio.volume = 1.0;
     this.remote_audio.play();
+
+    // update db
+    this.db_update();
+  }
+
+  private set_remote_audio_src(src, repeat=false) {
+    console.log("Fired set_localstream")
+    this.remote_audio = new Audio();
+    this.remote_audio.src = src;
+    this.remote_audio.volume = 1.0;
+    this.remote_audio.play();
+
+    if(repeat == true) {
+      this.remote_audio.addEventListener('ended', function() {
+        this.currentTime = 0;
+        this.play();
+      }, false);
+    }
 
     // update db
     this.db_update();
@@ -99,7 +124,7 @@ export class Call {
     // set remote audio
     if (this.session.connection.getRemoteStreams().length > 0) {
       console.log("Setting remote stream.")
-      this.set_remote_audio(this.session.connection.getRemoteStreams()[0]);
+      this.set_remote_audio_stream(this.session.connection.getRemoteStreams()[0]);
     }
 
     if (e.originator === 'remote') {
@@ -117,6 +142,12 @@ export class Call {
 
   call_answer() {
     console.log("Fired call_answer.");
+    
+    if(this.status != 'ringing') {
+      return;
+    }
+
+    this.stop_remote_audio();
     this.session.answer();
 
     console.log("peer indentity:" + this.session.connection.peerIdentity)
@@ -182,6 +213,7 @@ export class Call {
     
     // delete db
     this.db_delete();
+    this.stop_remote_audio();
   }
 
   private on_failed(e) {
@@ -191,6 +223,7 @@ export class Call {
     
     // delete call
     this.db_delete();
+    this.stop_remote_audio();
   }
 
   private on_hold(e) {
