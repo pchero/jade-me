@@ -82,6 +82,16 @@ export class BuddyComponent implements OnInit {
     this.jService.add_chat(name, detail, 1, members);
   }
 
+  private call_handler(): void {
+    const target = this.detail.uuid_user;
+    
+    if(target == '') {
+      return;
+    }
+
+    this.jService.send_call(target, "user");  
+  }
+
   ngOnInit() {
     // get
   }
