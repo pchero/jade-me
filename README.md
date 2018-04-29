@@ -17,8 +17,10 @@ $ npm start
 ## Demo
 You can try it at here.
 
-ID: admin
-Password: admin
+ID/Password
+- test1/test1
+- test2/test2
+- ...
 
 https://project.pchero21.com/jade-me/
 
