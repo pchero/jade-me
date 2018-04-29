@@ -10,7 +10,7 @@
       <div class="columns is-mobile" *ngFor="let m of db().order('tm_create asec').get()">
     
         <div [ngClass]="{' is-offset-1 me': m.uuid_owner == info.uuid}" class="chat-bubble column is-10">
-          <p ><b>{{m.uuid_owner}}</b>: {{m.message.message}} </p>
+          <p ><b>{{m.name}}</b>: {{m.message.message}} </p>
         </div>
       </div>
     

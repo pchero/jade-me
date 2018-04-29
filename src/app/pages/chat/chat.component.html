@@ -50,7 +50,7 @@
             <label>Members</label>
             <div *ngIf="detail.room;else other">
               <select multiple class="form-control">
-                <option *ngFor="let m of detail.room.members">{{m}}</option>
+                <option *ngFor="let m of detail.room.members">{{m.name}}</option>
               </select>
             </div>
             <ng-template #other>
