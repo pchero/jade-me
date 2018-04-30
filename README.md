@@ -22,7 +22,7 @@ ID/Password
 - test2/test2
 - ...
 
-https://project.pchero21.com/jade-me/
+https://project.pchero21.com:8202/
 
 [![Screen Preview](./jade-me.png)](./jade-me.png)
 
