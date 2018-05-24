@@ -17,7 +17,7 @@
           <input type="checkbox" value="remember-me"> Remember me
         </label>
       </div>
-      <button class="btn btn-lg btn-primary btn-block" (click)="signin_handler()" type="submit">Sign in</button>
+      <button class="btn btn-lg btn-primary btn-block" (click)="signin_handler()" [disabled]="submit_invalid" type="submit">Sign in</button>
     </form>
 
   </div> <!-- /container -->

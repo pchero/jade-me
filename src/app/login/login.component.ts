@@ -12,15 +12,26 @@ export class LoginComponent implements OnInit {
   
   username: string;
   password: string;
+  submit_invalid = false;
 
-  constructor(private jService: JadeService, private route: Router) { }
+  constructor(private jService: JadeService, private route: Router) {
+  }
 
   ngOnInit() {
   }
 
   signin_handler() {
+    this.submit_invalid = true;
+
     this.jService.login(this.username, this.password).subscribe(
       res => {
+        console.log("Logged in.");
+
+        if(!res) {
+          this.submit_invalid = false;
+          return;
+        }
+
         const token = res.result.authtoken;
 
         // set authtoken
@@ -38,6 +49,10 @@ export class LoginComponent implements OnInit {
             this.route.navigate(['/']);
           }
         );
+      },
+      error => {
+        console.log("Faied to login. " + error);
+        this.submit_invalid = false;
       }
     );
   }
