@@ -1,6 +1,8 @@
 <nb-card>
   <nb-card-header>
-    {{name}} - {{detail}}
+    <div (click)="chatinfo_handler()"  style="cursor: pointer;">
+      <b>{{name}}</b> {{detail}}
+    </div>
   </nb-card-header>
         
   <nb-card-body>

@@ -23,6 +23,7 @@ export class JadeService {
   private info: any = {};
   private contacts: any = {};
   private messages: any = {};
+  private cur_buddy: string = '';
   private cur_chat: string = '';
   private cur_chatroom: string = '';
 
@@ -70,6 +71,10 @@ export class JadeService {
     console.log('Update token. token: ' + token);
     this.authtoken = token;
   }
+
+  set_curbuddy(uuid: string) {
+    this.cur_buddy = uuid;
+  }
   
   set_curchat(uuid: string) {
     this.cur_chat = uuid;
@@ -107,6 +112,10 @@ export class JadeService {
 
   get_my_uuid() {
     return this.info.uuid;
+  }
+
+  get_curbuddy() {
+    return this.cur_buddy;
   }
 
   get_curchat() {
@@ -356,6 +365,43 @@ export class JadeService {
       }
     );
   }
+
+  get_chat_by_members(members) {
+    const chats = this.db_chats().get();
+
+    for(let i = 0; i < chats.length; i++) {
+      const chat = chats[i];
+
+      if(chat.room.type != 1) {
+        continue;
+      }
+
+      for(let j = 0; j < chat.room.members.length; j++) {
+        const ret = members[chat.room.members[j].uuid];
+        if(!ret) {
+          return chat.uuid;
+        }
+      }
+    }
+  }
+
+  private is_equal_members(a, b) {
+    a.sort();
+    b.sort();
+
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length != b.length) return false;
+  
+    // If you don't care about the order of the elements inside
+    // the array, you should sort both arrays here.
+  
+    for (var i = 0; i < a.length; ++i) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  }
+  
 
   private init_chatmessage(uuid:string, uuid_room: string) {
     console.log('init_chatmessage. uuid: ' + uuid + ', room_uuid: ' + uuid_room);
@@ -688,9 +734,9 @@ export class JadeService {
   private message_handler_me_chats_room_delete(j_msg: any) {
     const uuid = j_msg['uuid'];
     this.db_chats({uuid: uuid}).remove(j_msg);
-    this.delete_message_db(j_msg.room.uuid);
+    this.delete_message_db(j_msg.uuid_room);
 
-    console.log("Delete chat room. " + j_msg.room.uuid);
+    console.log("Delete chat room. " + j_msg.uuid_room);
   }
 
   private message_handler_me_info_update(j_msg: any) {

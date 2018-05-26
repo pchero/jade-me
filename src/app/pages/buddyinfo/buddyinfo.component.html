@@ -1,0 +1,139 @@
+<nb-card>
+  <nb-card-header>
+    Buddy detail <p class="fa fa-times" (click)="close_handler()" style="display: inline; cursor: pointer;" align="right"></p>
+  </nb-card-header>
+
+  <nb-card-body>
+    <div align="center">
+
+      <div class="form-group">
+        <i class="fa fa-user fa-5x" style="display:block" ></i>
+      </div>
+
+      <div class="form-group">
+        <div class=".col-6 .col-sm-4" style="display:inline-block;">
+          <input type="text" [(ngModel)]="buddy.name" class="form-control" id="name" placeholder="Name">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class=".col-6 .col-sm-4" style="display:inline-block;">
+            <input type="text" [(ngModel)]="buddy.detail" class="form-control" id="detail" placeholder="Detail">
+        </div>        
+      </div>
+    
+      <div>
+
+        <div class="form-group col-sm-1" (click)="update_handler()" style="display:inline-block; cursor: pointer;">
+          <i class="fa fa-pencil fa-3x" id="update"></i><br>
+          <label for="update">Update</label>
+        </div>
+
+        <div class="form-group col-sm-1" (click)="chat_handler()" style="display:inline-block; cursor: pointer;">
+          <i class="fa fa-comment fa-3x" id="chat"></i><br>
+          <label for="chat">Chat</label>
+        </div>
+        
+        <div class="form-group col-sm-1" (click)="call_handler()" style="display:inline-block; cursor: pointer;">
+          <i class="fa fa-phone fa-3x" id="call"></i><br>
+          <label for="call">Call</label>
+        </div>
+
+        <div class="form-group col-sm-1" (click)="delete_handler()" style="display:inline-block; cursor: pointer;">
+          <i class="fa fa-ban fa-3x" id="delete"></i><br>
+          <label for="delete">Delete</label>
+        </div>
+
+      </div>
+
+    </div>
+
+  </nb-card-body>
+
+</nb-card>
+
+
+<!-- <nb-card>
+  <nb-card-header>
+    My buddies
+  </nb-card-header>
+        
+  <nb-card-body>
+    <ng2-smart-table
+      [settings]="settings"
+      [source]="source"
+      (deleteConfirm)="onDeleteConfirm($event)"
+      (rowSelect)="onRowSelect($event)"
+      >
+      </ng2-smart-table>
+  </nb-card-body>
+</nb-card>
+
+<nb-card>
+  <nb-card-header>
+    Buddy detail
+  </nb-card-header>
+
+  <nb-card-body>
+
+    <div class="row">
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="uuid">UUID</label>
+          <input type="text" readonly="true" [(ngModel)]="detail.uuid" class="form-control" id="uuid" placeholder="UUID">
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="uuid_user">UUID-User</label>
+          <input type="text" readonly="true" [(ngModel)]="detail.uuid_user" class="form-control" id="uuid_user" placeholder="UUID-User">
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" [(ngModel)]="detail.name" class="form-control" id="name" placeholder="Name">
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="detail">Detail</label>
+          <input type="text" [(ngModel)]="detail.detail" class="form-control" id="detail" placeholder="Detail">
+        </div>
+      </div>
+
+    </div>
+      
+  </nb-card-body>
+
+  <nb-card-footer>
+    <div class="col-sm-9">
+      <button class="btn btn-success" (click)="update_handler()">Update info</button>
+      <button class="btn btn-info" (click)="chat_handler()">Create chat</button>
+      <button class="btn btn-primary" (click)="call_handler()">Create call</button>
+    </div>
+  </nb-card-footer>
+
+</nb-card>
+
+
+<nb-card>
+  <nb-card-header>
+    Buddies
+  </nb-card-header>
+
+  <nb-card-body>
+    <div class="contact" *ngFor="let c of db().get()">
+      <nb-user [picture]="c?.picture" [name]="c?.name" [title]="c?.detail" showTitleValue="true" size="large" (click)="chatting_handler(c)"></nb-user>
+      <div>
+        <i class="i-contact fa fa-phone" (click)="chat_handler()"></i>
+        <i class="i-contact fa fa-comment" (click)="chat_handler()"></i>
+      </div>
+    </div>
+  </nb-card-body>
+
+</nb-card> -->

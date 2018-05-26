@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
           res => {
             if(res != true) {
               console.log("Could not login correctly.");
+              this.submit_invalid = false;
               return;
             }
             

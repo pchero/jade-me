@@ -54,7 +54,7 @@
     "classlist.js": "1.1.20150312",
     "core-js": "2.5.1",
     "echarts": "^4.0.2",
-    "font-awesome": "4.7.0",
+    "font-awesome": "^4.7.0",
     "intl": "1.2.5",
     "ionicons": "2.0.1",
     "jssip": "^3.2.8",

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SmartTableService } from '../../@core/data/smart-table.service';
 import { LocalDataSource } from 'ng2-smart-table';
 import { JadeService } from '../../@core/data/jade.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'jade-room',
@@ -11,7 +12,7 @@ import { JadeService } from '../../@core/data/jade.service';
 export class RoomComponent implements OnInit {
 
   private chat_uuid: string = '';
-  private chatroom_uuid: string = '';
+  // private chatroom_uuid: string = '';
   private db;
   private info;
   private chat_info;
@@ -22,13 +23,13 @@ export class RoomComponent implements OnInit {
 
   source: LocalDataSource = new LocalDataSource();
 
-  constructor(private jService: JadeService) {
+  constructor(private jService: JadeService, private route: Router) {
     this.chat_uuid = this.jService.get_curchat();
-    this.chatroom_uuid = this.jService.get_curchatroom();
+    // this.chatroom_uuid = this.jService.get_curchatroom();
     this.info = this.jService.get_info();
     this.chat_info = this.jService.get_chat(this.chat_uuid);
 
-    this.db = this.jService.get_chatroom_messages(this.chatroom_uuid);
+    this.db = this.jService.get_chatroom_messages(this.chat_info.room.uuid);
 
     // console.log(this.db().order("tm_create asec").get());
 
@@ -44,6 +45,10 @@ export class RoomComponent implements OnInit {
 
   send_handler() {
     this.send_message();
+  }
+
+  chatinfo_handler() {
+    this.route.navigate(['/pages/roominfo']);
   }
 
   call_handler() {

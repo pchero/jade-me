@@ -4,8 +4,10 @@ import { PagesComponent } from './pages.component';
 import { PagesRoutingModule } from './pages-routing.module';
 import { ThemeModule } from '../@theme/theme.module';
 import { BuddyComponent } from './buddy/buddy.component';
+import { BuddyinfoComponent } from './buddyinfo/buddyinfo.component';
 import { ChatComponent } from './chat/chat.component';
 import { RoomComponent } from './room/room.component';
+import { RoominfoComponent } from './roominfo/roominfo.component';
 import { CallComponent } from './call/call.component';
 import { SearchComponent } from './search/search.component';
 import { SettingComponent } from './setting/setting.component';
@@ -26,8 +28,10 @@ const PAGES_COMPONENTS = [
   declarations: [
     ...PAGES_COMPONENTS,
     BuddyComponent,
+    BuddyinfoComponent,
     ChatComponent,
     RoomComponent,
+    RoominfoComponent,
     CallComponent,
     SearchComponent,
     SettingComponent,

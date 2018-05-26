@@ -1,66 +1,12 @@
 <nb-card>
   <nb-card-header>
-    My buddies
-  </nb-card-header>
-        
-  <nb-card-body>
-    <ng2-smart-table
-      [settings]="settings"
-      [source]="source"
-      (deleteConfirm)="onDeleteConfirm($event)"
-      (rowSelect)="onRowSelect($event)"
-      >
-      </ng2-smart-table>
-  </nb-card-body>
-</nb-card>
-
-<nb-card>
-  <nb-card-header>
-    Buddy detail
+    Buddies
   </nb-card-header>
 
   <nb-card-body>
-
-    <div class="row">
-
-      <div class="col-sm-6">
-        <div class="form-group">
-          <label for="uuid">UUID</label>
-          <input type="text" readonly="true" [(ngModel)]="detail.uuid" class="form-control" id="uuid" placeholder="UUID">
-        </div>
-      </div>
-
-      <div class="col-sm-6">
-        <div class="form-group">
-          <label for="uuid_user">UUID-User</label>
-          <input type="text" readonly="true" [(ngModel)]="detail.uuid_user" class="form-control" id="uuid_user" placeholder="UUID-User">
-        </div>
-      </div>
-
-      <div class="col-sm-6">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" [(ngModel)]="detail.name" class="form-control" id="name" placeholder="Name">
-        </div>
-      </div>
-
-      <div class="col-sm-6">
-        <div class="form-group">
-          <label for="detail">Detail</label>
-          <input type="text" [(ngModel)]="detail.detail" class="form-control" id="detail" placeholder="Detail">
-        </div>
-      </div>
-
+    <div class="contact" *ngFor="let c of db().get()" (click)="buddy_handler(c)">
+      <nb-user [picture]="c?.picture" [name]="c?.name" [title]="c?.detail" showTitleValue="true" size="large" (click)="buddy_handler(c)"></nb-user>
     </div>
-      
   </nb-card-body>
-
-  <nb-card-footer>
-    <div class="col-sm-9">
-      <button class="btn btn-success" (click)="update_handler()">Update info</button>
-      <button class="btn btn-info" (click)="chat_handler()">Create chat</button>
-      <button class="btn btn-primary" (click)="call_handler()">Create call</button>
-    </div>
-  </nb-card-footer>
 
 </nb-card>
