@@ -368,21 +368,64 @@ export class JadeService {
 
   get_chat_by_members(members) {
     const chats = this.db_chats().get();
-
+    
     for(let i = 0; i < chats.length; i++) {
       const chat = chats[i];
+      let flg = true;
+      console.log("chat info. i: " + i + ", chat.uuid: " + chat.uuid);
 
       if(chat.room.type != 1) {
         continue;
       }
 
-      for(let j = 0; j < chat.room.members.length; j++) {
-        const ret = members[chat.room.members[j].uuid];
-        if(!ret) {
-          return chat.uuid;
-        }
+      if(chat.room.members.length != members.length) {
+        continue;
       }
+
+      // let member in chat.room.members
+
+      // chat.room.members.forEach(item => {
+      //   console.log("Item: " + item.uuid);
+
+      //   const ret = members[chat.room.members[j].uuid];
+      //   if(!ret) {
+      //     flg = false;
+      //     return;
+      //   }
+      // });
+
+
+      for(let j = 0; j < chat.room.members.length; j++) {
+        const uuid = chat.room.members[j].uuid;
+        console.log("Check member. j: " + j + ", uuid: " + uuid);
+
+        const ret = members.includes(uuid);
+        if(ret == false) {
+          flg = false;
+          break;
+        }
+        // for(let k = 0; k < members.length; k++) {
+        //   const member = members[k];
+        //   if(member == chat.members[j].uuid) {
+        //     flg = true;
+        //   }
+        // }
+        
+        // const ret = members[chat.room.members[j].uuid];
+        // if(!ret) {
+        //   flg = false;
+        //   break;
+        // }
+      }
+      
+      if(flg == false) {
+        continue;
+      }
+
+      return chat.uuid;
     }
+
+    return null;
   }
 
   private is_equal_members(a, b) {
