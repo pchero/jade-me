@@ -52,8 +52,9 @@ export class SipService {
       password: password,
       autoConnect: false,
       register: true,
-      register_expires: 600,
+      register_expires: 3600,
       session_timers: true,
+      // session_timers_refresh_method: 'update',
       connection_recovery_min_interval: 2,
       connection_recovery_max_interval: 30,
       registrar_server: '',
@@ -116,6 +117,7 @@ export class SipService {
 
   private on_unregistered(e) {
     console.log("Fired on_unregistered.");
+    this.ua.register();
   }
 
   private on_registrationfailed(e) {
@@ -124,6 +126,7 @@ export class SipService {
 
   private on_registrationexpiring(e) {
     console.log("Fired on_registrationexpiring.");
+    this.ua.register();
   }
 
 }

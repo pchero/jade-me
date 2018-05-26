@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { SmartTableService } from '../../@core/data/smart-table.service';
 import { LocalDataSource } from 'ng2-smart-table';
 import { JadeService } from '../../@core/data/jade.service';
 import { SipService } from '../../@core/data/sip.service';
