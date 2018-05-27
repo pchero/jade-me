@@ -12,7 +12,7 @@
   "scripts": {
     "ng": "ng",
     "conventional-changelog": "conventional-changelog",
-    "start": "ng serve --host 0.0.0.0 --port 4202 --ssl 1 --ssl-key ./jade-me.pem --ssl-cert ./jade-me.pem",
+    "start": "ng serve --host 0.0.0.0 --port 8202 --ssl 1 --ssl-key ./jade-me.pem --ssl-cert ./jade-me.pem --disableHostCheck true",
     "build": "ng build",
     "build:prod": "npm run build -- --prod --aot",
     "test": "ng test -sr",
