@@ -1,5 +1,6 @@
 ## jade-me
 The jade-me is a simple user tool for jade.
+![Alt Text](./jade-me.gif)
 
 ## Features
 * Chat function.
